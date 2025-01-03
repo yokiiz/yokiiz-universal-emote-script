@@ -1,0 +1,94 @@
+local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoid = character:WaitForChild("Humanoid")
+local UserInputService = game:GetService("UserInputService")
+local StarterGui = game:GetService("StarterGui")
+
+local soundId = "rbxassetid://4590662766"
+local sound = Instance.new("Sound")
+sound.SoundId = soundId
+sound.Parent = character
+sound.Volume = 1
+
+sound:Play()
+
+StarterGui:SetCore("SendNotification", {
+    Title = "script made by yokiiz";
+    Text = "7okiiz on discord";
+    Duration = 5;
+})
+
+local animations = {
+    ["H"] = {id = "rbxassetid://16371217304", startTime = 0},
+    ["X"] = {id = "rbxassetid://698251653", startTime = 0.55},
+    ["V"] = {id = "rbxassetid://13694096724", startTime = 1.2},
+    ["N"] = {id = "rbxassetid://18526288497", startTime = 2},
+    ["M"] = {id = "rbxassetid://18665811005", startTime = 0},
+    ["J"] = {id = "rbxassetid://15122972413", startTime = 0},
+    ["B"] = {id = "rbxassetid://18537387180", startTime = 0},
+    ["Y"] = {id = "rbxassetid://10714390497", startTime = 0.5},
+    ["U"] = {id = "rbxassetid://18537367238", startTime = 0},
+    ["C"] = {id = "rbxassetid://136831243854748", startTime = 2.35},
+    ["L"] = {id = "rbxassetid://10714003221", startTime = 0.6},
+    ["K"] = {id = "rbxassetid://12259826609", startTime = 0},
+    ["P"] = {id = "rbxassetid://10147821284", startTime = 0.8},
+    ["Five"] = {id = "rbxassetid://10214314957", startTime = 1.5},
+    ["Six"] = {id = "rbxassetid://15693621070", startTime = 0.7},
+    ["Insert"] = {id = "rbxassetid://16270690701", startTime = 0},
+    ["Delete"] = {id = "rbxassetid://18537363391", startTime = 0},
+    ["PageUp"] = {id = "rbxassetid://16738332169", startTime = 0},
+    ["Four"] = {id = "rbxassetid://10714342957", startTime = 0},
+    ["Seven"] = {id = "rbxassetid://18537384940", startTime = 0},
+    ["BackSlash"] = {id = "rbxassetid://90841854866960", startTime = 0.5},
+    ["Quote"] = {id = "rbxassetid://10714003221", startTime = 1.8},
+    ["Z"] = {id = "rbxassetid://10713957138", startTime = 1.8},
+    ["F"] = {id = "rbxassetid://11309304959", startTime = 20.1},
+    ["RightBracket"] = {id = "rbxassetid://121025429593434", startTime = 20.1},
+    ["Minus"] = {id = "rbxassetid://3360694441", startTime = 0},
+    ["Zero"] = {id = "rbxassetid://18537387180", startTime = 0.4},
+}
+
+local animationTracks = {}
+
+for key, value in pairs(animations) do
+    local animation = Instance.new("Animation")
+    animation.AnimationId = value.id
+    local animTrack = humanoid:LoadAnimation(animation)
+
+    if animTrack then
+        animationTracks[key] = {track = animTrack, startTime = value.startTime}
+    end
+end
+
+local function onInputBegan(input, gameProcessed)
+    if gameProcessed then return end
+
+    local key = input.KeyCode.Name
+
+    if animationTracks[key] then
+        if key == "Zero" then
+            if animationTracks["X"] then
+                local xAnimTrack = animationTracks["X"].track
+                xAnimTrack:Play()
+                xAnimTrack.TimePosition = animationTracks["X"].startTime
+            end
+        else
+            for _, anim in pairs(animationTracks) do
+                if anim.track.IsPlaying then
+                    anim.track:Stop()
+                end
+            end
+        end
+
+        local animTrack = animationTracks[key].track
+        animTrack:Play()
+        animTrack.TimePosition = animationTracks[key].startTime
+    end
+end
+
+UserInputService.InputBegan:Connect(onInputBegan)
+
+for _, anim in pairs(animationTracks) do
+    anim.track.Stopped:Connect(function()
+    end)
+end
